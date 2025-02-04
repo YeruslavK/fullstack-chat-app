@@ -38,7 +38,13 @@ const SignUpPage = () => {
     e.preventDefault();
 
     const success = validateForm();
-    if (success === true) signup(formData);
+    if (success) {
+      signup(formData).then((response) => {
+        if (response && response.uniqueId) {
+          toast.success(`Your unique ID is ${response.uniqueId}`);
+        }
+      });
+    }
   };
 
   return (

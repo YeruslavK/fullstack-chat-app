@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    uniqueId: {
+      type: String,
+      unique: true,
+    },
   },
   { timestamps: true }
 );

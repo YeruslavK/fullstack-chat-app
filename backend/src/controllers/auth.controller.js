@@ -23,10 +23,22 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create a unique ID #1234 for each new added user
+    let uniqueId;
+    let isUnique = false;
+
+    while (!isUnique) {
+      uniqueId = `#${Math.floor(1000 + Math.random() * 9000)}`;
+      const existingUser = await User.findOne({ uniqueId });
+      if (!existingUser) isUnique = true;
+    }
+
     const newUser = new User({
       fullName,
       email,
       password: hashedPassword,
+
+      uniqueId,
     });
 
     if (newUser) {
@@ -38,6 +50,8 @@ export const signup = async (req, res) => {
         fullName: newUser.fullName,
         email: newUser.email,
         profilePic: newUser.profilePic,
+
+        uniqueId: newUser.uniqueId,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
