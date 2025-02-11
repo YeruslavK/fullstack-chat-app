@@ -3,6 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
@@ -31,17 +32,17 @@ const Sidebar = () => {
 
     if (userToAdd) {
       if (!contactsArr.some((contact) => contact.uniqueId === newUserId)) {
-        setContactsArr([...contactsArr, userToAdd]); // Add to contacts
-        console.log("User added to contacts:", userToAdd);
+        setContactsArr([...contactsArr, userToAdd]);
+        toast.success("User added to contacts:", userToAdd);
       } else {
-        console.log("User is already in contacts.");
+        toast.error("User is already in contacts.");
       }
     } else {
-      console.log("User not found.");
+      toast.error("User not found.");
     }
 
     setShowAddUserPopup(false);
-    setNewUserId(""); // Reset input
+    setNewUserId("");
   };
 
   if (isUsersLoading) return <SidebarSkeleton />;
@@ -57,7 +58,7 @@ const Sidebar = () => {
             className="btn btn-sm gap-2 transition-colors"
             onClick={() => setShowAddUserPopup(true)}
           >
-            Add user
+            +
           </span>
         </div>
         <div className="mt-3 hidden lg:flex items-center gap-2">
@@ -127,8 +128,8 @@ const Sidebar = () => {
       </div>
 
       {showAddUserPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-          <div className="bg-black p-5 rounded shadow-lg">
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-black p-5 rounded shadow-lg z-50">
             <h2 className="text-lg font-medium mb-4">Add User</h2>
             <input
               type="text"
